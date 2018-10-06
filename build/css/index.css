@@ -1,1 +1,1 @@
-h1{color:#ff0}
+body{background:-webkit-gradient(linear,left top,left bottom,from(#fff),to(green));background:-webkit-linear-gradient(top,#fff,green);background:-o-linear-gradient(top,#fff,green);background:linear-gradient(180deg,#fff,green)}h1{color:#ff0}

@@ -2,13 +2,14 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
-const pug = require('./webpack/pug');
-const devserver = require('./webpack/devserver');
-const sass = require('./webpack/sass');
-const css = require('./webpack/css');
-const extractCSS = require('./webpack/css.extract');
-const uglifyJS = require('./webpack/js.uglify');
-const images = require('./webpack/images');
+const commonPug = require('./webpack/common.pug');
+const commonImages = require('./webpack/common.images');
+const prodExtractCSS = require('./webpack/prod.css.extract');
+const prodUglifyJS = require('./webpack/prod.js.uglify');
+const devDevserver = require('./webpack/dev.devserver');
+const devSass = require('./webpack/dev.sass');
+const devCss = require('./webpack/dev.css');
+const devMaps = require('./webpack/dev.maps');
 
 const PATHS = {
     source: path.join(__dirname, 'source'),
@@ -36,33 +37,29 @@ const common = merge([
                 chunks: ['blog', 'common'],
                 template: PATHS.source + '/pages/blog/blog.pug'
             }),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'common'
-            }),
-            new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery'
-            })
+            new webpack.optimize.CommonsChunkPlugin({name: 'common'}),
+            new webpack.ProvidePlugin({$: 'jquery',jQuery: 'jquery'})
         ]
     },
-    pug(),
-    images()
+    commonPug(),
+    commonImages()
 ]);
 
 module.exports = function(env) {
     if (env === 'production'){
         return merge([
             common,
-            extractCSS(),
-            uglifyJS()
+            prodExtractCSS(),
+            prodUglifyJS()
         ]);
     }
     if (env === 'development'){
         return merge([
             common,
-            devserver(),
-            sass(),
-            css()
+            devDevserver(),
+            devSass(),
+            devCss(),
+            devMaps()
         ])
     }
 };
